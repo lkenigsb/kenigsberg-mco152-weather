@@ -49,7 +49,7 @@ public class WeatherFrame extends JFrame {
 
         WeatherService service = retrofit.create(WeatherService.class);
 
-        Disposable disposable = service.getCurrentWeather()
+        Disposable disposable = service.getCurrentWeather("Staten Island")
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(

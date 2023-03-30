@@ -10,11 +10,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-class WeatherServiceTest {
+public class WeatherServiceTest {
 
 
     @Test
-    void getCurrentWeather() {
+    public void getCurrentWeather() {
         // given
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/")
@@ -26,8 +26,7 @@ class WeatherServiceTest {
         WeatherService service = retrofit.create(WeatherService.class);
 
         // when
-        CurrentWeather currentWeather = service.getCurrentWeather().blockingFirst();
-
+        CurrentWeather currentWeather = service.getCurrentWeather("Staten Island").blockingFirst();
 
         // then
         Assertions.assertNotNull(currentWeather);
@@ -35,5 +34,27 @@ class WeatherServiceTest {
         //Below test will fail when weather is cold
         Assertions.assertTrue(currentWeather.main.temp > 0);
         Assertions.assertEquals("Staten Island", currentWeather.name);
+    }
+
+    @Test
+    public void getFiveDayWeather()
+    {
+        // given
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
+
+
+        WeatherService service = retrofit.create(WeatherService.class);
+
+        // when
+        FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();
+
+        // then
+        //Assertions.assertNotNull(fiveDayWeather);
+        Assertions.assertNotNull(fiveDayWeather.list[0].dt_txt);
+        Assertions.assertEquals("Staten Island", fiveDayWeather.city.name);
     }
 }
