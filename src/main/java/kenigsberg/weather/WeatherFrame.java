@@ -53,8 +53,8 @@ public class WeatherFrame extends JFrame {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(
-                        CurrentWeather -> {
-                            double info = CurrentWeather.main.temp;
+                        currentWeather -> {
+                            double info = currentWeather.main.temp;
                             weatherInfo.setText(String.valueOf(info));
                             weatherInfo.setHorizontalAlignment(SwingConstants.CENTER);
                         },
