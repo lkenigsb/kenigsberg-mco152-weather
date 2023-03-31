@@ -1,13 +1,18 @@
 package kenigsberg.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Main {
     double temp;
 
-    double feels_like;
+    @SerializedName("feels_like")
+    double feelsLike;
 
-    double temp_min;
+    @SerializedName("temp_min")
+    double tempMin;
 
-    double temp_max;
+    @SerializedName("temp_max")
+    double tempMax;
 
     int humidity;
 

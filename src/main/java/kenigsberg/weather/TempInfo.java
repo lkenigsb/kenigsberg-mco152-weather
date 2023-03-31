@@ -1,7 +1,11 @@
 package kenigsberg.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 public class TempInfo {
     double temp;
-    double feels_like;
+
+    @SerializedName("feels_like")
+    double feelsLike;
     int humidity;
 }
