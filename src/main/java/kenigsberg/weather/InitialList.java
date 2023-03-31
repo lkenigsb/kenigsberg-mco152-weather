@@ -11,7 +11,7 @@ public class InitialList {
 
     Wind wind;
 
-    FiveDayWeatherVisibility visibility;
+    int visibility;
 
-    Dt_Text dt_txt;
+    String dt_txt;
 }

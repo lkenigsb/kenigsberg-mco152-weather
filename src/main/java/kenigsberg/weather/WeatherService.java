@@ -12,7 +12,6 @@ public interface WeatherService {
     /**
      * HMWK: add another @GET - getCall() - for the 5-day forecast
      * https://api.openweathermap.org/data/2.5/forecast?q=Staten%20Island&appid=bcb814bf7bcba6823c73eb6e9ebfdd9b&units=imperial
-     *
      * Taken From: https://openweathermap.org/forecast5#name5
      * list - 40 items, 5 days
      * dt - time

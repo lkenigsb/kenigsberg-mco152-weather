@@ -53,7 +53,7 @@ public class WeatherServiceTest {
         FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();
 
         // then
-        //Assertions.assertNotNull(fiveDayWeather);
+        Assertions.assertNotNull(fiveDayWeather);
         Assertions.assertNotNull(fiveDayWeather.list[0].dt_txt);
         Assertions.assertEquals("Staten Island", fiveDayWeather.city.name);
     }
