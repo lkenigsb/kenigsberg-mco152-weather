@@ -1,5 +1,7 @@
 package kenigsberg.weather;
 
+import com.google.gson.annotations.SerializedName;
+
 public class InitialList {
     long dt;
 
@@ -13,5 +15,6 @@ public class InitialList {
 
     int visibility;
 
-    String dt_txt;
+    @SerializedName("dt_txt")
+    String dtText;
 }
