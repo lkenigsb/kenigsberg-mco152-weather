@@ -37,8 +37,7 @@ public class WeatherServiceTest {
     }
 
     @Test
-    public void getFiveDayWeather()
-    {
+    public void getFiveDayWeather() {
         // given
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.openweathermap.org/")
