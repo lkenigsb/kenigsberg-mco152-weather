@@ -54,7 +54,8 @@ public class WeatherFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //currentWeatherView.location = location.getText();
-                currentWeatherView.setForecast(service.getFiveDayWeather(location.getText()).blockingFirst());
+                currentWeatherView.setForecast(service.getFiveDayWeather
+                        (location.getText()).blockingFirst());
                 mainPanel.add(currentWeatherView, BorderLayout.CENTER);
             }
         });
