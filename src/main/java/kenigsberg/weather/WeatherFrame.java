@@ -78,8 +78,6 @@ public class WeatherFrame extends JFrame {
 
     /*
 
-        //FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();
-
     WEATHER GUI
     public WeatherFrame() throws IOException {
 
