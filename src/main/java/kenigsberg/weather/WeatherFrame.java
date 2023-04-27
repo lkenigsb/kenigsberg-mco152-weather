@@ -1,5 +1,7 @@
 package kenigsberg.weather;
 
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -11,6 +13,7 @@ import java.awt.event.ActionListener;
 
 
 public class WeatherFrame extends JFrame {
+    CurrentWeatherView currentWeatherView;
 
     public WeatherFrame() {
 
@@ -23,10 +26,17 @@ public class WeatherFrame extends JFrame {
 
         WeatherService service = retrofit.create(WeatherService.class);
 
-        FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();
+        Disposable disposable = service.getFiveDayWeather("Staten Island")
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(
+                        fiveDayWeather -> {
+                            currentWeatherView = new CurrentWeatherView();
+                            currentWeatherView.setForecast(fiveDayWeather);
+                        },
+                        Throwable::printStackTrace
 
-        CurrentWeatherView currentWeatherView = new CurrentWeatherView(fiveDayWeather);
-        currentWeatherView.setForecast(fiveDayWeather);
+                );
 
 
         setSize(800, 600);
@@ -50,6 +60,7 @@ public class WeatherFrame extends JFrame {
 
         mainPanel.add(currentWeatherView, BorderLayout.CENTER);
 
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -60,14 +71,16 @@ public class WeatherFrame extends JFrame {
             }
         });
 
-
         setContentPane(mainPanel);
+
 
     }
 
     /*
 
-    EARTHQUAKE GUI
+        //FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();
+
+    WEATHER GUI
     public WeatherFrame() throws IOException {
 
         setSize(800, 300);

@@ -11,10 +11,6 @@ public class CurrentWeatherView extends JComponent {
 
     FiveDayWeather fiveDayWeather;
 
-    public CurrentWeatherView(FiveDayWeather fiveDayWeather) {
-        this.fiveDayWeather = fiveDayWeather;
-
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
