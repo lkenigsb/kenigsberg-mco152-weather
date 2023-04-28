@@ -1,5 +1,6 @@
 package kenigsberg.weather;
 
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 
 
 public class WeatherFrame extends JFrame {
+    WeatherService service;
     CurrentWeatherView currentWeatherView;
 
     public WeatherFrame() {
@@ -45,10 +47,23 @@ public class WeatherFrame extends JFrame {
                 .build();
 
 
-        WeatherService service = retrofit.create(WeatherService.class);
+        service = retrofit.create(WeatherService.class);
 
+        setSubscribe("Staten Island");
 
-        Disposable disposable = service.getFiveDayWeather("Staten Island")
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setSubscribe(location.getText());
+            }
+        });
+
+        setContentPane(mainPanel);
+    }
+
+    public void setSubscribe(String location)
+    {
+        Disposable disposable = service.getFiveDayWeather(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(
@@ -58,24 +73,6 @@ public class WeatherFrame extends JFrame {
                         Throwable::printStackTrace
 
                 );
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Disposable disposable = service.getFiveDayWeather(location.getText())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.newThread())
-                        .subscribe(
-                                fiveDayWeather -> {
-                                    currentWeatherView.setForecast(fiveDayWeather);
-                                },
-                                Throwable::printStackTrace
-
-                        );
-            }
-        });
-
-        setContentPane(mainPanel);
     }
 
     /*

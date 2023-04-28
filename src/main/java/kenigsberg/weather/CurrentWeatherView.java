@@ -11,7 +11,6 @@ public class CurrentWeatherView extends JComponent {
 
     FiveDayWeather fiveDayWeather;
 
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
