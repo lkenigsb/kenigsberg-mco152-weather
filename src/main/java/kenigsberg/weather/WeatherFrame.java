@@ -1,6 +1,5 @@
 package kenigsberg.weather;
 
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
@@ -49,19 +48,19 @@ public class WeatherFrame extends JFrame {
 
         service = retrofit.create(WeatherService.class);
 
-        setSubscribe("Staten Island");
+        requestForecast("Staten Island");
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setSubscribe(location.getText());
+                requestForecast(location.getText());
             }
         });
 
         setContentPane(mainPanel);
     }
 
-    public void setSubscribe(String location)
+    public void requestForecast(String location)
     {
         Disposable disposable = service.getFiveDayWeather(location)
                 .subscribeOn(Schedulers.io())
