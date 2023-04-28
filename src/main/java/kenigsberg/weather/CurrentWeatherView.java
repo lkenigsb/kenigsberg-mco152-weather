@@ -19,6 +19,11 @@ public class CurrentWeatherView extends JComponent {
         int height = getHeight();
         g.translate(0, height);
 
+        //if fiveDayWeather null, don't do anything
+        if (fiveDayWeather == null)
+        {
+            return;
+        }
         for (int i = 0; i < fiveDayWeather.list.length - 1; i++) {
             int temp = (int) fiveDayWeather.list[i].main.temp; //y
 

@@ -17,28 +17,6 @@ public class WeatherFrame extends JFrame {
 
     public WeatherFrame() {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build();
-
-
-        WeatherService service = retrofit.create(WeatherService.class);
-
-        Disposable disposable = service.getFiveDayWeather("Staten Island")
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(
-                        fiveDayWeather -> {
-                            currentWeatherView = new CurrentWeatherView();
-                            currentWeatherView.setForecast(fiveDayWeather);
-                        },
-                        Throwable::printStackTrace
-
-                );
-
-
         setSize(800, 600);
         setTitle("Current Weather");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -57,23 +35,47 @@ public class WeatherFrame extends JFrame {
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-
+        currentWeatherView = new CurrentWeatherView();
         mainPanel.add(currentWeatherView, BorderLayout.CENTER);
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
+
+
+        WeatherService service = retrofit.create(WeatherService.class);
+
+
+        Disposable disposable = service.getFiveDayWeather("Staten Island")
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(
+                        fiveDayWeather -> {
+                            currentWeatherView.setForecast(fiveDayWeather);
+                        },
+                        Throwable::printStackTrace
+
+                );
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //currentWeatherView.location = location.getText();
-                currentWeatherView.setForecast(service.getFiveDayWeather(
-                        location.getText()).blockingFirst());
-                mainPanel.add(currentWeatherView, BorderLayout.CENTER);
+                Disposable disposable = service.getFiveDayWeather(location.getText())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.newThread())
+                        .subscribe(
+                                fiveDayWeather -> {
+                                    currentWeatherView.setForecast(fiveDayWeather);
+                                },
+                                Throwable::printStackTrace
+
+                        );
             }
         });
 
         setContentPane(mainPanel);
-
-
     }
 
     /*
