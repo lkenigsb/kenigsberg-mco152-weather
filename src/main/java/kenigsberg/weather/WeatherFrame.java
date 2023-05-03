@@ -1,7 +1,5 @@
 package kenigsberg.weather;
 
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -13,8 +11,17 @@ import java.awt.event.ActionListener;
 
 
 public class WeatherFrame extends JFrame {
-    WeatherService service;
-    CurrentWeatherView currentWeatherView;
+    ForecastWeatherView forecastWeatherView;
+
+    private final Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("https://api.openweathermap.org/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+            .build();
+
+
+    private final WeatherService service = retrofit.create(WeatherService.class);
+    private ForecastWeatherController controller;
 
     public WeatherFrame() {
 
@@ -36,42 +43,22 @@ public class WeatherFrame extends JFrame {
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        currentWeatherView = new CurrentWeatherView();
-        mainPanel.add(currentWeatherView, BorderLayout.CENTER);
+        forecastWeatherView = new ForecastWeatherView();
+        mainPanel.add(forecastWeatherView, BorderLayout.CENTER);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build();
+        controller = new ForecastWeatherController(forecastWeatherView, service);
 
-
-        service = retrofit.create(WeatherService.class);
-
-        requestForecast("Staten Island");
+        controller.updateWeather("Staten Island");
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                requestForecast(location.getText());
+                controller.updateWeather(location.getText());
             }
         });
 
         setContentPane(mainPanel);
-    }
 
-    public void requestForecast(String location)
-    {
-        Disposable disposable = service.getFiveDayWeather(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(
-                        fiveDayWeather -> {
-                            currentWeatherView.setForecast(fiveDayWeather);
-                        },
-                        Throwable::printStackTrace
-
-                );
     }
 
     /*

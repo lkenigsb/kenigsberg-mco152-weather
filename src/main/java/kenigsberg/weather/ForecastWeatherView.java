@@ -1,13 +1,9 @@
 package kenigsberg.weather;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class CurrentWeatherView extends JComponent {
+public class ForecastWeatherView extends JComponent {
 
     FiveDayWeather fiveDayWeather;
 
