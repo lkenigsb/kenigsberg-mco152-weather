@@ -25,8 +25,7 @@ public class ForecastWeatherController {
         this.service = service;
     }
 
-    public void updateWeather(String location)
-    {
+    public void updateWeather(String location) {
         Disposable disposable = service.getFiveDayWeather(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())

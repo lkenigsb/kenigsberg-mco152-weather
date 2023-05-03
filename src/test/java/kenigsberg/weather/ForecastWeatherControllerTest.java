@@ -16,8 +16,7 @@ class ForecastWeatherControllerTest {
     }
 
     @Test
-    void updateWeather()
-    {
+    void updateWeather() {
         // given
         ForecastWeatherView view = mock();
         WeatherService service = mock();

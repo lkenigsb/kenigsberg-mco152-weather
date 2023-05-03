@@ -15,8 +15,7 @@ public class ForecastWeatherView extends JComponent {
         g.translate(0, height);
 
         //if fiveDayWeather null, don't do anything
-        if (fiveDayWeather == null)
-        {
+        if (fiveDayWeather == null) {
             return;
         }
         for (int i = 0; i < fiveDayWeather.list.length - 1; i++) {
