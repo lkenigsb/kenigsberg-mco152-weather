@@ -8,11 +8,75 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class WeatherFrame extends JFrame {
-    CurrentWeather currentWeather;
+    WeatherService service;
+    CurrentWeatherView currentWeatherView;
 
+    public WeatherFrame() {
+
+        setSize(800, 600);
+        setTitle("Current Weather");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout());
+
+        JTextField location = new JTextField("Staten Island");
+        topPanel.add(location);
+
+        JButton button = new JButton("Submit");
+        topPanel.add(button);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        currentWeatherView = new CurrentWeatherView();
+        mainPanel.add(currentWeatherView, BorderLayout.CENTER);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
+
+
+        service = retrofit.create(WeatherService.class);
+
+        requestForecast("Staten Island");
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                requestForecast(location.getText());
+            }
+        });
+
+        setContentPane(mainPanel);
+    }
+
+    public void requestForecast(String location)
+    {
+        Disposable disposable = service.getFiveDayWeather(location)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(
+                        fiveDayWeather -> {
+                            currentWeatherView.setForecast(fiveDayWeather);
+                        },
+                        Throwable::printStackTrace
+
+                );
+    }
+
+    /*
+
+    WEATHER GUI
     public WeatherFrame() throws IOException {
 
         setSize(800, 300);
@@ -61,7 +125,8 @@ public class WeatherFrame extends JFrame {
                         Throwable::printStackTrace
 
                 );
-    }
-
-
+        */
 }
+
+
+
