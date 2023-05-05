@@ -1,18 +1,12 @@
 package kenigsberg.weather;
 
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.util.concurrent.atomic.AtomicReference;
-
-public class WeatherServiceTest {
-
-
+public class OpenWeatherMapServiceTest {
     @Test
     public void getCurrentWeather() {
         // given
@@ -23,7 +17,7 @@ public class WeatherServiceTest {
                 .build();
 
 
-        WeatherService service = retrofit.create(WeatherService.class);
+        OpenWeatherMapService service = retrofit.create(OpenWeatherMapService.class);
 
         // when
         CurrentWeather currentWeather = service.getCurrentWeather("Staten Island").blockingFirst();
@@ -46,7 +40,7 @@ public class WeatherServiceTest {
                 .build();
 
 
-        WeatherService service = retrofit.create(WeatherService.class);
+        OpenWeatherMapService service = retrofit.create(OpenWeatherMapService.class);
 
         // when
         FiveDayWeather fiveDayWeather = service.getFiveDayWeather("Staten Island").blockingFirst();

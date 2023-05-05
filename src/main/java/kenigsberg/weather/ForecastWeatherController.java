@@ -8,17 +8,20 @@ package kenigsberg.weather;
  * This way all 3 of these things can be independently tested
  */
 
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
+import javax.inject.Inject;
 
 public class ForecastWeatherController {
     private ForecastWeatherView view;
-    private WeatherService service;
+    private OpenWeatherMapService service;
 
+    //@inject tells dagger this is how you create one of these things
 
+    @Inject
     public ForecastWeatherController(
             ForecastWeatherView view,
-            WeatherService service
+            OpenWeatherMapService service
     ) {
 
         this.view = view;
@@ -26,7 +29,7 @@ public class ForecastWeatherController {
     }
 
     public void updateWeather(String location) {
-        Disposable disposable = service.getFiveDayWeather(location)
+        service.getFiveDayWeather(location)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
                 .subscribe(

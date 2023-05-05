@@ -4,6 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,44 +12,35 @@ import java.awt.event.ActionListener;
 
 
 public class WeatherFrame extends JFrame {
-    ForecastWeatherView forecastWeatherView;
-
-    private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build();
-
-
-    private final WeatherService service = retrofit.create(WeatherService.class);
+    private ForecastWeatherView forecastWeatherView;
     private ForecastWeatherController controller;
+    private JTextField location;
 
-    public WeatherFrame() {
+    @Inject
+    public WeatherFrame(ForecastWeatherView forecastWeatherView, ForecastWeatherController controller) {
+        this.forecastWeatherView = forecastWeatherView;
+        this.controller = controller;
 
         setSize(800, 600);
-        setTitle("Current Weather");
+        setTitle("Forecast Weather");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
+        topPanel.setLayout(new BorderLayout());
 
-        JTextField location = new JTextField("Staten Island");
-        topPanel.add(location);
+        location = new JTextField("Staten Island");
+        topPanel.add(location, BorderLayout.CENTER);
 
         JButton button = new JButton("Submit");
-        topPanel.add(button);
+        topPanel.add(button, BorderLayout.EAST);
 
+        mainPanel.add(forecastWeatherView, BorderLayout.CENTER);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        forecastWeatherView = new ForecastWeatherView();
-        mainPanel.add(forecastWeatherView, BorderLayout.CENTER);
-
-        controller = new ForecastWeatherController(forecastWeatherView, service);
-
-        controller.updateWeather("Staten Island");
+        setContentPane(mainPanel);
 
         button.addActionListener(new ActionListener() {
             @Override
@@ -57,7 +49,7 @@ public class WeatherFrame extends JFrame {
             }
         });
 
-        setContentPane(mainPanel);
+        controller.updateWeather(location.getText());
 
     }
 

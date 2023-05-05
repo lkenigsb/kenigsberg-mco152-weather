@@ -1,11 +1,21 @@
 package kenigsberg.weather;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
+//Have singleton to show that only have 1 of these things across service
+
+@Singleton
 public class ForecastWeatherView extends JComponent {
 
-    FiveDayWeather fiveDayWeather;
+    @Inject
+    public ForecastWeatherView()
+    {
+
+    }
+    private FiveDayWeather fiveDayWeather;
 
     @Override
     protected void paintComponent(Graphics g) {

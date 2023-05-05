@@ -5,7 +5,6 @@ import io.reactivex.rxjava3.plugins.RxJavaPlugins;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ForecastWeatherControllerTest {
@@ -19,7 +18,7 @@ class ForecastWeatherControllerTest {
     void updateWeather() {
         // given
         ForecastWeatherView view = mock();
-        WeatherService service = mock();
+        OpenWeatherMapService service = mock();
         ForecastWeatherController controller = new ForecastWeatherController(view, service);
 
         FiveDayWeather fiveDayWeather = mock();
