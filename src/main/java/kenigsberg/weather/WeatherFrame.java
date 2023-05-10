@@ -17,7 +17,8 @@ public class WeatherFrame extends JFrame {
     private JTextField location;
 
     @Inject
-    public WeatherFrame(ForecastWeatherView forecastWeatherView, ForecastWeatherController controller) {
+    public WeatherFrame(ForecastWeatherView forecastWeatherView,
+                        ForecastWeatherController controller) {
         this.forecastWeatherView = forecastWeatherView;
         this.controller = controller;
 

@@ -15,6 +15,7 @@ public class ForecastWeatherView extends JComponent {
     {
 
     }
+
     private FiveDayWeather fiveDayWeather;
 
     @Override
