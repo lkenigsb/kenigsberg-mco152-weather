@@ -1,15 +1,22 @@
 package kenigsberg.weather;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
-public class CurrentWeatherView extends JComponent {
+//Have singleton to show that only have 1 of these things across service
 
-    FiveDayWeather fiveDayWeather;
+@Singleton
+public class ForecastWeatherView extends JComponent {
+
+    @Inject
+    public ForecastWeatherView()
+    {
+
+    }
+
+    private FiveDayWeather fiveDayWeather;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -19,8 +26,7 @@ public class CurrentWeatherView extends JComponent {
         g.translate(0, height);
 
         //if fiveDayWeather null, don't do anything
-        if (fiveDayWeather == null)
-        {
+        if (fiveDayWeather == null) {
             return;
         }
         for (int i = 0; i < fiveDayWeather.list.length - 1; i++) {

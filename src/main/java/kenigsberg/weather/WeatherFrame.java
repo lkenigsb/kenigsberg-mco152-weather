@@ -1,11 +1,10 @@
 package kenigsberg.weather;
 
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,65 +12,46 @@ import java.awt.event.ActionListener;
 
 
 public class WeatherFrame extends JFrame {
-    WeatherService service;
-    CurrentWeatherView currentWeatherView;
+    private ForecastWeatherView forecastWeatherView;
+    private ForecastWeatherController controller;
+    private JTextField location;
 
-    public WeatherFrame() {
+    @Inject
+    public WeatherFrame(ForecastWeatherView forecastWeatherView,
+                        ForecastWeatherController controller) {
+        this.forecastWeatherView = forecastWeatherView;
+        this.controller = controller;
 
         setSize(800, 600);
-        setTitle("Current Weather");
+        setTitle("Forecast Weather");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
+        topPanel.setLayout(new BorderLayout());
 
-        JTextField location = new JTextField("Staten Island");
-        topPanel.add(location);
+        location = new JTextField("Staten Island");
+        topPanel.add(location, BorderLayout.CENTER);
 
         JButton button = new JButton("Submit");
-        topPanel.add(button);
+        topPanel.add(button, BorderLayout.EAST);
 
+        mainPanel.add(forecastWeatherView, BorderLayout.CENTER);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        currentWeatherView = new CurrentWeatherView();
-        mainPanel.add(currentWeatherView, BorderLayout.CENTER);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-                .build();
-
-
-        service = retrofit.create(WeatherService.class);
-
-        requestForecast("Staten Island");
+        setContentPane(mainPanel);
 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                requestForecast(location.getText());
+                controller.updateWeather(location.getText());
             }
         });
 
-        setContentPane(mainPanel);
-    }
+        controller.updateWeather(location.getText());
 
-    public void requestForecast(String location)
-    {
-        Disposable disposable = service.getFiveDayWeather(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .subscribe(
-                        fiveDayWeather -> {
-                            currentWeatherView.setForecast(fiveDayWeather);
-                        },
-                        Throwable::printStackTrace
-
-                );
     }
 
     /*
