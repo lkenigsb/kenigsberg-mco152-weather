@@ -5,6 +5,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,13 +15,19 @@ import java.awt.event.ActionListener;
 public class WeatherFrame extends JFrame {
     private ForecastWeatherView forecastWeatherView;
     private ForecastWeatherController controller;
+    private CurrentWeatherController currentWeatherController;
     private JTextField location;
 
     @Inject
     public WeatherFrame(ForecastWeatherView forecastWeatherView,
-                        ForecastWeatherController controller) {
+                        ForecastWeatherController controller,
+                        CurrentWeatherController currentWeatherController,
+                        @Named("imageLabel") JLabel imageLabel,
+                        @Named("degreesLabel") JLabel degreesLabel) {
+
         this.forecastWeatherView = forecastWeatherView;
         this.controller = controller;
+        this.currentWeatherController = currentWeatherController;
 
         setSize(800, 600);
         setTitle("Forecast Weather");
@@ -38,6 +45,11 @@ public class WeatherFrame extends JFrame {
         JButton button = new JButton("Submit");
         topPanel.add(button, BorderLayout.EAST);
 
+        JPanel currentWeatherPanel = new JPanel();
+        currentWeatherPanel.add(imageLabel);
+        currentWeatherPanel.add(degreesLabel);
+        topPanel.add(currentWeatherPanel, BorderLayout.SOUTH);
+
         mainPanel.add(forecastWeatherView, BorderLayout.CENTER);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
@@ -47,10 +59,13 @@ public class WeatherFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.updateWeather(location.getText());
+                currentWeatherController.updateWeather(location.getText());
             }
         });
 
         controller.updateWeather(location.getText());
+        currentWeatherController.updateWeather(location.getText());
+
 
     }
 
