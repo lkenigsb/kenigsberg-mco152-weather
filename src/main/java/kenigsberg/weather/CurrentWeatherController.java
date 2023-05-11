@@ -34,7 +34,7 @@ public class CurrentWeatherController {
     public void setCurrentWeather(CurrentWeather currentWeather) throws MalformedURLException {
         degreeLabel.setText(String.valueOf(currentWeather.main.temp));
         String icon = currentWeather.weather[0].icon;
-        String url ="https://openweathermap.org/img/w/" + icon + ".png";
+        String url="https://openweathermap.org/img/w/" + icon + ".png";
         imageLabel.setIcon(new ImageIcon(new URL(url)));
     }
 

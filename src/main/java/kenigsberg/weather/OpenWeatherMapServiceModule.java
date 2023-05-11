@@ -31,6 +31,7 @@ public class OpenWeatherMapServiceModule {
     {
         return new JLabel();
     }
+
     @Provides
     @Named("imageLabel")
     @Singleton
